@@ -32,24 +32,24 @@ public class UnitFight {
 		LinkedList<Unit> units1 = new LinkedList<Unit>();
 		LinkedList<Unit> units2 = new LinkedList<Unit>();
 
-		createUnits(units1);
-		createUnits(units2);
+		createUnits(units1, 1);
+		createUnits(units2, 2);
 
+		Random rand = new Random();
 		while (!units1.isEmpty() && !units2.isEmpty()) {
-			Random rand = new Random();
-			for (int i = 0; i < units1.size() && i < units2.size(); i++) {
-				Unit unit2 = units2.get(rand.nextInt(units2.size()));
-				Unit unit1 = units1.get(rand.nextInt(units1.size()));
+			Unit unit2 = units2.get(rand.nextInt(units2.size()));
+			Unit unit1 = units1.get(rand.nextInt(units1.size()));
 
-				units1.get(i).Attack(unit2, units1, units2);
-				if (unit2.life <= 0) {
-					units2.remove(unit2);
-				}
-				if (units1.isEmpty() || units2.isEmpty()) {
-					break;
-				}
+			unit1.Attack(unit2, units1, units2);
+			if (unit2.life <= 0) {
+				units2.remove(unit2);
+			}
+			if (units1.isEmpty() || units2.isEmpty()) {
+				break;
+			}
 
-				units2.get(i).Attack(unit1, units2, units1);
+			if (unit2.life > 0) {
+				unit2.Attack(unit1, units2, units1);
 				if (unit1.life <= 0) {
 					units1.remove(unit1);
 				}
@@ -57,38 +57,39 @@ public class UnitFight {
 					break;
 				}
 			}
-			System.out.println("战斗结束 - " + units1);
-			System.out.println(units2);
 		}
+		System.out.println("战斗结束 - " + units1);
+		System.out.println(units2);
 
 	}
 
-	public static Hero createUnits(LinkedList<Unit> units) {
+	public static Hero createUnits(LinkedList<Unit> units, int TeamNum) {
 		Hero hero;
 		Random rand = new Random();
 		{
 			if (rand.nextInt(2) < 1) {
-				hero = new Summoner("召唤师1",
+				hero = new Summoner("召唤师" + TeamNum,
 						SUMMONER_ATTACK_MIN + rand.nextInt(SUMMONER_ATTACK_MAX - SUMMONER_ATTACK_MIN + 1),
 						SUMMONER_DEFENSE, SUMMONER_LIFE);
-				System.out.println("召唤师1 " + "Attack:" + ((Unit) hero).getAttack() + " Defense:"
+				System.out.println("召唤师" + TeamNum + "Attack:" + ((Unit) hero).getAttack() + " Defense:"
 						+ ((Unit) hero).getDefense() + " Life:" + ((Unit) hero).getLife());
 			} else {
-				hero = new Soilder("战士1",
+				hero = new Soilder("战士" + TeamNum,
 						SOLDIER_ATTACK_MIN + rand.nextInt(SOLDIER_ATTACK_MAX - SOLDIER_ATTACK_MIN + 1), SOLDIER_DEFENSE,
 						SOLDIER_LIFE);
-				System.out.println("战士1 " + "Attack:" + ((Unit) hero).getAttack() + " Defense:"
+				System.out.println("战士" + TeamNum + "Attack:" + ((Unit) hero).getAttack() + " Defense:"
 						+ ((Unit) hero).getDefense() + " Life:" + ((Unit) hero).getLife());
 			}
 			units.add((Unit) hero);
 
 			for (int i = 1; i <= 5; i++) {
 				if (rand.nextInt(3) == 0) {
-					units.add(new Unit("unit1-" + i, UNIT_ATTACK, UNIT_DEFENSE, UNIT_LIFE));
+					units.add(new Unit("unit" + TeamNum + "-" + i, UNIT_ATTACK, UNIT_DEFENSE, UNIT_LIFE));
 				} else if (rand.nextInt(2) == 1) {
-					units.add(new RangeUnit("range1-" + i, RANGE_UNIT_ATTACK, RANGE_DEFENSE, RANGE_LIFE));
+					units.add(new RangeUnit("range" + TeamNum + "-" + i, RANGE_UNIT_ATTACK, RANGE_DEFENSE, RANGE_LIFE));
 				} else {
-					units.add(new ShieldUnit("shield1-" + i, SHIELD_UNIT_ATTACK, SHIELD_DEFENSE, SHIELD_LIFE));
+					units.add(new ShieldUnit("shield" + TeamNum + "-" + i, SHIELD_UNIT_ATTACK, SHIELD_DEFENSE,
+							SHIELD_LIFE));
 				}
 
 			}

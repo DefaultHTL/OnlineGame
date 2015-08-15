@@ -58,6 +58,9 @@ public class Unit {
 	public void HurtFrom(Unit enemy, double attack) {
 
 		double realDamage = attack - this.defense;
+		if (realDamage < 0) {
+			realDamage = 0;
+		}
 		this.life = this.life - realDamage;
 		if (defenseTime > 0) {
 			defenseTime--;
@@ -67,7 +70,7 @@ public class Unit {
 		}
 
 		System.out.println(String.format("%1$s受到%2$s的攻击,伤害%3$s,当前血量%4$s",
-				this.getName(), enemy.getName(), attack, this.life));
+				this.getName(), enemy.getName(), realDamage, this.life));
 
 		deathJudgingOrCounterAttack(enemy);
 	}
